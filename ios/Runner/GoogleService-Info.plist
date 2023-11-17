@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyAMFVH1VkLHwKx7iTL4X6JMaoKBm2S3TEI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>58693485475</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.flutterCommunityReditChatApp</string>
+	<key>PROJECT_ID</key>
+	<string>flutterredditchatapp</string>
+	<key>STORAGE_BUCKET</key>
+	<string>flutterredditchatapp.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:58693485475:ios:205fa813d628cb11019016</string>
+</dict>
+</plist>

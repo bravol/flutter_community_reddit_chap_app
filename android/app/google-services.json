@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "58693485475",
+    "project_id": "flutterredditchatapp",
+    "storage_bucket": "flutterredditchatapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58693485475:android:cc32f2e70295669f019016",
+        "android_client_info": {
+          "package_name": "com.example.flutter_community_redit_chat_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAS7GaHqeRV3lLm459Cyb4soIDMdcxBEXc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
