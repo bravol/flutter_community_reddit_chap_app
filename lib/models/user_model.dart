@@ -67,9 +67,11 @@ class UserModel {
       uid: map['uid'] as String,
       isAuthenticated: map['isAuthenticated'] as bool,
       karma: map['karma'] as int,
-      awards: List<String>.from(
-        (map['awards'] as List<String>),
-      ),
+      // awards: List<String>.from(
+      //   (map['awards'] as List<String>),
+      // ),
+
+      awards: (map['awards'] as List<dynamic>).cast<String>(),
     );
   }
 
