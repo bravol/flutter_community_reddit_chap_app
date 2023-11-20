@@ -43,6 +43,7 @@ dependencies:
   uuid: ^4.2.1
   firebase_auth: ^4.14.0
   google_fonts: ^6.1.0
+  dotted_border: ^2.1.0
 
 dev_dependencies:
   flutter_test:

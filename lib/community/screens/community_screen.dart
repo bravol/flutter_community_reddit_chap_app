@@ -4,10 +4,16 @@ import 'package:flutter_community_redit_chat_app/core/common/error_text.dart';
 import 'package:flutter_community_redit_chat_app/core/loader.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 class CommunityScreen extends ConsumerWidget {
   final String name;
   const CommunityScreen({super.key, required this.name});
+
+//a function to navigate to mod tools.
+  void navigateToModTools(BuildContext context) {
+    Routemaster.of(context).push('/mod-tools/$name');
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,7 +64,9 @@ class CommunityScreen extends ConsumerWidget {
                                 ),
                                 community.mods.contains(user.uid)
                                     ? OutlinedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          navigateToModTools(context);
+                                        },
                                         style: OutlinedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
