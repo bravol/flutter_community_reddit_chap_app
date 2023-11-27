@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter_community_redit_chat_app/theme/pallete.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 class ProfileDrawer extends ConsumerWidget {
   const ProfileDrawer({super.key});
@@ -9,6 +10,16 @@ class ProfileDrawer extends ConsumerWidget {
   //loging out
   void logout(WidgetRef ref) {
     ref.read(authControllerProvider.notifier).logout();
+  }
+
+  //to user profile
+  void navigateToUserProfile(BuildContext context, String uid) {
+    Routemaster.of(context).push('/u/$uid');
+  }
+
+  //toggling the theme
+  void toggleTheme(WidgetRef ref) {
+    ref.read(themeNotifierProvider.notifier).toggleTheme();
   }
 
   @override
@@ -38,7 +49,7 @@ class ProfileDrawer extends ConsumerWidget {
             leading: const Icon(
               Icons.person,
             ),
-            onTap: () {},
+            onTap: () => navigateToUserProfile(context, user.uid),
           ),
           ListTile(
             title: const Text('Log out'),
@@ -49,7 +60,10 @@ class ProfileDrawer extends ConsumerWidget {
             onTap: () => logout(ref),
           ),
           //switch
-          Switch.adaptive(value: true, onChanged: (val) {})
+          Switch.adaptive(
+              value: ref.watch(themeNotifierProvider.notifier).mode ==
+                  ThemeMode.dark,
+              onChanged: (val) => toggleTheme(ref))
         ],
       )),
     );

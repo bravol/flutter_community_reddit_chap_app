@@ -3,10 +3,12 @@ import 'package:flutter_community_redit_chat_app/community/screens/community_scr
 import 'package:flutter_community_redit_chat_app/community/screens/create_community_screen.dart';
 import 'package:flutter_community_redit_chat_app/screens/add_moderator.dart';
 import 'package:flutter_community_redit_chat_app/screens/edit_community_Screen.dart';
+import 'package:flutter_community_redit_chat_app/screens/edit_profile_screen.dart';
 import 'package:flutter_community_redit_chat_app/screens/home_screen.dart';
 import 'package:flutter_community_redit_chat_app/screens/login_user_screen.dart';
 import 'package:flutter_community_redit_chat_app/screens/mod_tools_screen.dart';
 import 'package:flutter_community_redit_chat_app/screens/signup_user_screen.dart';
+import 'package:flutter_community_redit_chat_app/screens/user_profile_screen.dart';
 import 'package:flutter_community_redit_chat_app/screens/welcome_screen.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -37,5 +39,13 @@ final loggedInRoute = RouteMap(routes: {
   '/add-moderator/:id': (routeData) => MaterialPage(
           child: AddModeratorScreen(
         id: routeData.pathParameters['id']!,
+      )),
+  '/u/:uid': (routeData) => MaterialPage(
+          child: UserProfileScreen(
+        uid: routeData.pathParameters['uid']!,
+      )),
+  '/edit-profile/:uid': (routeData) => MaterialPage(
+          child: EditUserProfileScreen(
+        uid: routeData.pathParameters['uid']!,
       )),
 });
