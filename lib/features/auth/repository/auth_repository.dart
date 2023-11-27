@@ -119,4 +119,9 @@ class AuthRepository {
           (snap) => UserModel.fromMap(snap.data() as Map<String, dynamic>),
         );
   }
+
+  //logging out
+  void logout() async {
+    await _auth.signOut();
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/community/screens/community_screen.dart';
 import 'package:flutter_community_redit_chat_app/community/screens/create_community_screen.dart';
+import 'package:flutter_community_redit_chat_app/screens/add_moderator.dart';
 import 'package:flutter_community_redit_chat_app/screens/edit_community_Screen.dart';
 import 'package:flutter_community_redit_chat_app/screens/home_screen.dart';
 import 'package:flutter_community_redit_chat_app/screens/login_user_screen.dart';
@@ -31,6 +32,10 @@ final loggedInRoute = RouteMap(routes: {
       )),
   '/edit-community/:id': (routeData) => MaterialPage(
           child: EditCommunityScreen(
+        id: routeData.pathParameters['id']!,
+      )),
+  '/add-moderator/:id': (routeData) => MaterialPage(
+          child: AddModeratorScreen(
         id: routeData.pathParameters['id']!,
       )),
 });

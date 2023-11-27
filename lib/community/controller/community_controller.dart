@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/community/repository/community_repository.dart';
 import 'package:flutter_community_redit_chat_app/core/constants/constants.dart';
+import 'package:flutter_community_redit_chat_app/core/failure.dart';
 import 'package:flutter_community_redit_chat_app/core/providers/storage_repository_provider.dart';
 import 'package:flutter_community_redit_chat_app/core/utils.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter_community_redit_chat_app/models/community_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:uuid/uuid.dart';
 
@@ -80,8 +82,9 @@ class CommunityController extends StateNotifier<bool> {
 
   //getting user communities
   Stream<List<Community>> getUserCommunities() {
-    final uid = _ref.read(userProvider)!.uid;
-    return _communityRepository.getUserCommunities(uid);
+    //current user id
+    // final uid = _ref.read(userProvider)!.uid;
+    return _communityRepository.getUserCommunities();
   }
 
   //getting community by name
@@ -126,5 +129,27 @@ class CommunityController extends StateNotifier<bool> {
   //search community
   Stream<List<Community>> searchCommunity(String query) {
     return _communityRepository.searchCommunity(query);
+  }
+
+  //join community
+  void leaveOrJoinCommunity(BuildContext context, Community community) async {
+    // getting the user id
+    final user = _ref.read(userProvider)!;
+
+    Either<Failure, void> res;
+    if (community.members.contains(user.uid)) {
+      res = await _communityRepository.leaveCommunity(community.id, user.uid);
+    } else {
+      res = await _communityRepository.joinCommunity(community.id, user.uid);
+    }
+
+    res.fold((l) => showErrorSnackBar(context, l.message), (r) {
+      if (community.members.contains(user.uid)) {
+        showSuccessSnackBar(context, 'You left the community successfully');
+      } else {
+        showSuccessSnackBar(
+            context, 'You have Joined the community successfully');
+      }
+    });
   }
 }

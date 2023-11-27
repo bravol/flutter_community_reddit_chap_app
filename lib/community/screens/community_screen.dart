@@ -3,6 +3,7 @@ import 'package:flutter_community_redit_chat_app/community/controller/community_
 import 'package:flutter_community_redit_chat_app/core/common/error_text.dart';
 import 'package:flutter_community_redit_chat_app/core/loader.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/auth_controller.dart';
+import 'package:flutter_community_redit_chat_app/models/community_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -13,6 +14,14 @@ class CommunityScreen extends ConsumerWidget {
 //a function to navigate to mod tools.
   void navigateToModTools(BuildContext context) {
     Routemaster.of(context).push('/mod-tools/$id');
+  }
+
+  //joining or leaving the community
+  void leaveOrJoinCommunity(
+      BuildContext context, Community community, WidgetRef ref) {
+    ref
+        .read(communityControllerProvider.notifier)
+        .leaveOrJoinCommunity(context, community);
   }
 
   @override
@@ -78,7 +87,8 @@ class CommunityScreen extends ConsumerWidget {
                                         child: const Text('Mod Tools'),
                                       )
                                     : OutlinedButton(
-                                        onPressed: () {},
+                                        onPressed: () => leaveOrJoinCommunity(
+                                            context, community, ref),
                                         style: OutlinedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
