@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 
 class ModToolsScreen extends StatelessWidget {
-  const ModToolsScreen({super.key, required this.name});
-  final String name;
+  const ModToolsScreen({super.key, required this.id});
+  final String id;
 
   void naviateToEditCommunityScreen(BuildContext context) {
-    Routemaster.of(context).push('edit-community/$name');
+    Routemaster.of(context).push('/edit-community/$id');
   }
 
   @override
@@ -23,11 +23,9 @@ class ModToolsScreen extends StatelessWidget {
             onTap: () {},
           ),
           ListTile(
-            leading: const Icon(Icons.add_moderator),
+            leading: const Icon(Icons.edit),
             title: const Text('Edit Community'),
-            onTap: () {
-              naviateToEditCommunityScreen(context);
-            },
+            onTap: () => naviateToEditCommunityScreen(context),
           ),
         ],
       ),

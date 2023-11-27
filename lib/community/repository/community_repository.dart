@@ -24,7 +24,7 @@ class CommunityRepository {
         throw 'community with the same name already exists';
       }
       return right(await _communitiesCollection
-          .doc(community.name)
+          .doc(community.id)
           .set(community.toMap()));
     } on FirebaseException catch (e) {
       return left(Failure(e.message!));
@@ -52,8 +52,43 @@ class CommunityRepository {
   }
 
   //getting community by name.
-  Stream<Community> getCommunityByName(String name) {
-    return _communitiesCollection.doc(name).snapshots().map(
-        (event) => Community.fromMap(event.data() as Map<String, dynamic>));
+  Stream<Community> getCommunityByName(String accountId) {
+    return _communitiesCollection.doc(accountId).snapshots().map((event) {
+      return Community.fromMap(event.data() as Map<String, dynamic>);
+    }).handleError((error) {
+      print("Error fetching account: $error");
+      return null;
+    });
+  }
+
+//editing the community
+  FutureVoid editCommunity(Community community) async {
+    try {
+      return right(
+          _communitiesCollection.doc(community.id).update(community.toMap()));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  //search community
+  Stream<List<Community>> searchCommunity(String query) {
+    return _communitiesCollection
+        .where('name',
+            isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
+            isLessThan: query.isEmpty
+                ? null
+                : query.substring(0, query.length - 1) +
+                    String.fromCharCode(query.codeUnitAt(query.length - 1) + 1))
+        .snapshots()
+        .map((event) {
+      List<Community> communities = [];
+      for (var doc in event.docs) {
+        communities.add(Community.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return communities;
+    });
   }
 }

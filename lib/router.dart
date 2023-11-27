@@ -21,16 +21,16 @@ final loggedInRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child: HomeScreen()),
   '/create_community': (_) =>
       const MaterialPage(child: CreateCommunityScreen()),
-  '/r/:name': (route) => MaterialPage(
+  '/r/:id': (route) => MaterialPage(
           child: CommunityScreen(
-        name: route.pathParameters['name']!,
+        id: route.pathParameters['id']!,
       )),
-  '/mod-tools/:name': (routeData) => MaterialPage(
+  '/mod-tools/:id': (routeData) => MaterialPage(
           child: ModToolsScreen(
-        name: routeData.pathParameters['name']!,
+        id: routeData.pathParameters['id']!,
       )),
-  '/edit-community/:name': (routeData) => MaterialPage(
+  '/edit-community/:id': (routeData) => MaterialPage(
           child: EditCommunityScreen(
-        name: routeData.pathParameters['name']!,
+        id: routeData.pathParameters['id']!,
       )),
 });

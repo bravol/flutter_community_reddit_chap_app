@@ -38,35 +38,33 @@ class Community {
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'name': name,
-      'banner': banner,
-      'avatar': avatar,
-      'members': members,
-      'mods': mods,
-    };
+    final result = <String, dynamic>{};
+
+    result.addAll({'id': id});
+    result.addAll({'name': name});
+    result.addAll({'banner': banner});
+    result.addAll({'avatar': avatar});
+    result.addAll({'members': members});
+    result.addAll({'mods': mods});
+
+    return result;
   }
 
   factory Community.fromMap(Map<String, dynamic> map) {
     return Community(
-      id: map['id'] as String,
-      name: map['name'] as String,
-      banner: map['banner'] as String,
-      avatar: map['avatar'] as String,
-      // members: List<String>.from((map['members'] as List<String>)),
-      // mods: List<String>.from((map['mods'] as List<String>)),
-
-      members: (map['members'] as List<dynamic>).cast<String>(),
-
-      mods: (map['mods'] as List<dynamic>).cast<String>(),
+      id: map['id'] ?? '',
+      name: map['name'] ?? '',
+      banner: map['banner'] ?? '',
+      avatar: map['avatar'] ?? '',
+      members: List<String>.from(map['members'] ?? []),
+      mods: List<String>.from(map['mods'] ?? []),
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory Community.fromJson(String source) =>
-      Community.fromMap(json.decode(source) as Map<String, dynamic>);
+      Community.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -74,10 +72,11 @@ class Community {
   }
 
   @override
-  bool operator ==(covariant Community other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other.id == id &&
+    return other is Community &&
+        other.id == id &&
         other.name == name &&
         other.banner == banner &&
         other.avatar == avatar &&

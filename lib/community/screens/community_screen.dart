@@ -7,19 +7,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
 class CommunityScreen extends ConsumerWidget {
-  final String name;
-  const CommunityScreen({super.key, required this.name});
+  final String id;
+  const CommunityScreen({super.key, required this.id});
 
 //a function to navigate to mod tools.
   void navigateToModTools(BuildContext context) {
-    Routemaster.of(context).push('/mod-tools/$name');
+    Routemaster.of(context).push('/mod-tools/$id');
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
     return Scaffold(
-      body: ref.watch(getCommunityByNameControllerProvider(name)).when(
+      body: ref.watch(getCommunityByIdControllerProvider(id)).when(
           data: (community) => NestedScrollView(
                 headerSliverBuilder: (context, innerBoxIsScrolled) {
                   return [

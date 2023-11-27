@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 //show snack bar in case of error or success message
@@ -28,4 +29,10 @@ void showErrorSnackBar(BuildContext context, String text) {
         ),
       ),
     );
+}
+
+//pick image
+Future<FilePickerResult?> pickImage() async {
+  final image = await FilePicker.platform.pickFiles(type: FileType.image);
+  return image;
 }

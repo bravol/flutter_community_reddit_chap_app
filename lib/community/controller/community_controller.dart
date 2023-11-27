@@ -1,39 +1,56 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/community/repository/community_repository.dart';
 import 'package:flutter_community_redit_chat_app/core/constants/constants.dart';
+import 'package:flutter_community_redit_chat_app/core/providers/storage_repository_provider.dart';
 import 'package:flutter_community_redit_chat_app/core/utils.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter_community_redit_chat_app/models/community_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:uuid/uuid.dart';
 
-//user communities controller provider
+// stream user communities controller provider
 final userCommuintiesControllerProvider = StreamProvider((ref) {
   final communityController = ref.watch(communityControllerProvider.notifier);
   return communityController.getUserCommunities();
 });
 
+//stream search community
+final searchCommunityProvider = StreamProvider.family((ref, String query) {
+  final communityController = ref.watch(communityControllerProvider.notifier);
+  return communityController.searchCommunity(query);
+});
+
 //every time we create a stream, we need also a Stream provider for it
-final getCommunityByNameControllerProvider =
-    StreamProvider.family((ref, String name) {
-  return ref
-      .watch(communityControllerProvider.notifier)
-      .getCommunityByName(name);
+final getCommunityByIdControllerProvider =
+    StreamProvider.family((ref, String id) {
+  return ref.watch(communityControllerProvider.notifier).getCommunityByName(id);
 });
 
 //commuinty controller provider
 final communityControllerProvider =
     StateNotifierProvider<CommunityController, bool>((ref) {
+  final communityRepository = ref.watch(communityRepositoryProvider);
+  final storageRepository = ref.watch(storageRepositoryProvider);
   return CommunityController(
-      communityRepository: ref.watch(communityRepositoryProvider), ref: ref);
+    communityRepository: communityRepository,
+    storageRepository: storageRepository,
+    ref: ref,
+  );
 });
 
 class CommunityController extends StateNotifier<bool> {
   final CommunityRepository _communityRepository;
+  final StorageRepository _storageRepository;
   final Ref _ref;
   CommunityController(
-      {required CommunityRepository communityRepository, required Ref ref})
+      {required CommunityRepository communityRepository,
+      required StorageRepository storageRepository,
+      required Ref ref})
       : _communityRepository = communityRepository,
+        _storageRepository = storageRepository,
         _ref = ref,
         super(false);
 
@@ -42,9 +59,10 @@ class CommunityController extends StateNotifier<bool> {
     state = true;
     //getting users id
     final uid = _ref.read(userProvider)?.uid ?? '';
-
+    const uuid = Uuid();
+    final id = uuid.v4();
     Community community = Community(
-      id: name,
+      id: id,
       name: name,
       banner: Constants.bannerDefault,
       avatar: Constants.avatarDefault,
@@ -67,7 +85,46 @@ class CommunityController extends StateNotifier<bool> {
   }
 
   //getting community by name
-  Stream<Community> getCommunityByName(String name) {
-    return _communityRepository.getCommunityByName(name);
+  Stream<Community> getCommunityByName(String id) {
+    return _communityRepository.getCommunityByName(id);
+  }
+
+//editing the community profile pic
+  void editCommunity(
+      {required File? profileFile,
+      required File? bannerFile,
+      required BuildContext context,
+      required Community community}) async {
+    state = true;
+    //profile picture
+    if (profileFile != null) {
+      final res = await _storageRepository.storeFile(
+          path: 'communities/profile', id: community.name, file: profileFile);
+
+      res.fold((l) => showErrorSnackBar(context, l.message),
+          (r) => community = community.copyWith(avatar: r));
+    }
+    //banner
+    if (bannerFile != null) {
+      final res = await _storageRepository.storeFile(
+          path: 'communities/banner', id: community.name, file: bannerFile);
+
+      res.fold(
+        (l) => showErrorSnackBar(context, l.message),
+        (r) => community = community.copyWith(banner: r),
+      );
+    }
+
+    final res = await _communityRepository.editCommunity(community);
+
+    state = false; //for loading indicator
+
+    res.fold((l) => showErrorSnackBar(context, l.message),
+        (r) => Routemaster.of(context).pop());
+  }
+
+  //search community
+  Stream<List<Community>> searchCommunity(String query) {
+    return _communityRepository.searchCommunity(query);
   }
 }
