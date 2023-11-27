@@ -33,11 +33,20 @@ class _AddModeratorScreenState extends ConsumerState<AddModeratorScreen> {
     });
   }
 
+  // save moderator
+  void saveModerators() {
+    ref
+        .read(communityControllerProvider.notifier)
+        .addModerator(widget.id, uids.toList(), context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.done))],
+        actions: [
+          IconButton(onPressed: saveModerators, icon: const Icon(Icons.done))
+        ],
       ),
       body: ref.watch(getCommunityByIdControllerProvider(widget.id)).when(
           data: (community) => ListView.builder(
