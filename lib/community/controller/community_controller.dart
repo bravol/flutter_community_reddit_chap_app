@@ -83,8 +83,8 @@ class CommunityController extends StateNotifier<bool> {
   //getting user communities
   Stream<List<Community>> getUserCommunities() {
     //current user id
-    // final uid = _ref.read(userProvider)!.uid;
-    return _communityRepository.getUserCommunities();
+    final uid = _ref.read(userProvider)!.uid;
+    return _communityRepository.getUserCommunities(uid);
   }
 
   //getting community by name

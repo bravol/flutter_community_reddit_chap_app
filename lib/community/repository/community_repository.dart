@@ -43,9 +43,9 @@ class CommunityRepository {
       _firestore.collection(FirebaseConstants.communitiesCollection);
 
   //getting users communities
-  Stream<List<Community>> getUserCommunities() {
+  Stream<List<Community>> getUserCommunities(String uid) {
     return _communitiesCollection
-        .where('members', arrayContains: _auth.currentUser!.uid)
+        .where('members', arrayContains: uid)
         .snapshots()
         .map((event) {
       List<Community> communities = [];
