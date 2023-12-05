@@ -12,7 +12,12 @@ import 'package:routemaster/routemaster.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_community_redit_chat_app/core/utils.dart';
 
-//controller provider
+//stream provider for user posts
+final userPostControllerProvider = StreamProvider.family(
+    (ref, List<Community> communities) =>
+        ref.watch(postControllerProvider.notifier).fetchUserPosts(communities));
+
+//post controller provider
 final postControllerProvider =
     StateNotifierProvider<PostController, bool>((ref) {
   final postRepository = ref.watch(postRepositoryProvider);
@@ -141,9 +146,17 @@ class PostController extends StateNotifier<bool> {
       final res = await _postRepository.addPost(post);
       state = false;
       res.fold((l) => showErrorSnackBar(context, l.message), (r) {
-        showSuccessSnackBar(context, 'Posed Successfully');
+        showSuccessSnackBar(context, 'Posted Successfully');
         Routemaster.of(context).pop();
       });
     });
+  }
+
+  //getting user posts
+  Stream<List<Post>> fetchUserPosts(List<Community> communities) {
+    if (communities.isNotEmpty) {
+      return _postRepository.fetchUserPosts(communities);
+    }
+    return Stream.value([]);
   }
 }

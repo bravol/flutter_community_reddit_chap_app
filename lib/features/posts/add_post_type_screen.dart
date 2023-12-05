@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/community/controller/community_controller.dart';

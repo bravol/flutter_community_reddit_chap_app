@@ -3,6 +3,7 @@ import 'package:flutter_community_redit_chat_app/core/constants/firebase_constan
 import 'package:flutter_community_redit_chat_app/core/failure.dart';
 import 'package:flutter_community_redit_chat_app/core/providers/firebase_provider.dart';
 import 'package:flutter_community_redit_chat_app/core/type_def.dart';
+import 'package:flutter_community_redit_chat_app/models/community_model.dart';
 import 'package:flutter_community_redit_chat_app/models/post_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -29,5 +30,19 @@ class PostRepository {
     } catch (e) {
       return left(Failure(e.toString()));
     }
+  }
+
+  //fetcing posts
+  Stream<List<Post>> fetchUserPosts(List<Community> communities) {
+    return _postsCollection
+        .where('communityName',
+            whereIn: communities.map((e) => e.name).toList())
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (event) => event.docs
+              .map((e) => Post.fromMap(e.data() as Map<String, dynamic>))
+              .toList(),
+        );
   }
 }
