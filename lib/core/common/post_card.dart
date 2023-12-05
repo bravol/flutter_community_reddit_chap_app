@@ -2,6 +2,7 @@ import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/core/constants/constants.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/auth_controller.dart';
+import 'package:flutter_community_redit_chat_app/features/auth/controller/post_controller.dart';
 import 'package:flutter_community_redit_chat_app/models/post_model.dart';
 import 'package:flutter_community_redit_chat_app/theme/pallete.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,24 @@ class PostCard extends ConsumerWidget {
   const PostCard({super.key, required this.post});
 
   final Post post;
+
+//delete post
+  void deletePost(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    ref.read(postControllerProvider.notifier).deletePost(post, context);
+  }
+
+  //up vote the post
+  void upvotePost(WidgetRef ref) {
+    ref.read(postControllerProvider.notifier).upvote(post);
+  }
+
+  //down vote the post
+  void downvotePost(WidgetRef ref) {
+    ref.read(postControllerProvider.notifier).downvote(post);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -77,7 +96,7 @@ class PostCard extends ConsumerWidget {
                               //delete post
                               if (post.uid == user.uid)
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () => deletePost(context, ref),
                                   icon: Icon(
                                     Icons.delete,
                                     color: Pallete.redColor,
@@ -106,7 +125,7 @@ class PostCard extends ConsumerWidget {
                             ),
                           if (isTypeLink)
                             SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.35,
+                              height: MediaQuery.of(context).size.height * 0.20,
                               width: double.infinity,
                               child: AnyLinkPreview(
                                 displayDirection:
@@ -130,7 +149,7 @@ class PostCard extends ConsumerWidget {
                               Row(
                                 children: [
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed: () => upvotePost(ref),
                                     icon: Icon(
                                       Constants.up,
                                       size: 30,
@@ -144,7 +163,7 @@ class PostCard extends ConsumerWidget {
                                     style: const TextStyle(fontSize: 16),
                                   ),
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed: () => downvotePost(ref),
                                     icon: Icon(
                                       Constants.down,
                                       size: 30,

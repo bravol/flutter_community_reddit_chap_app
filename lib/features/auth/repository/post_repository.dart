@@ -45,4 +45,53 @@ class PostRepository {
               .toList(),
         );
   }
+
+  //deleting the post.
+  FutureVoid deletePost(Post post) async {
+    try {
+      return right(_postsCollection.doc(post.id).delete());
+    } on FirebaseException catch (e) {
+      return left(Failure(e.message!));
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  //upvoting
+  void upvote(Post post, String userId) async {
+    if (post.downvotes.contains(userId)) {
+      _postsCollection.doc(post.id).update({
+        'downvotes': FieldValue.arrayRemove([userId])
+      });
+    }
+
+    if (post.upvotes.contains(userId)) {
+      _postsCollection.doc(post.id).update({
+        'upvotes': FieldValue.arrayRemove([userId])
+      });
+    } else {
+      _postsCollection.doc(post.id).update({
+        'upvotes': FieldValue.arrayUnion([userId])
+      });
+    }
+  }
+
+  //downvoting
+  void downvote(Post post, String userId) async {
+    if (post.upvotes.contains(userId)) {
+      _postsCollection.doc(post.id).update({
+        'upvotes': FieldValue.arrayRemove([userId])
+      });
+    }
+
+    if (post.downvotes.contains(userId)) {
+      _postsCollection.doc(post.id).update({
+        'downvotes': FieldValue.arrayRemove([userId])
+      });
+    } else {
+      _postsCollection.doc(post.id).update({
+        'downvotes': FieldValue.arrayUnion([userId])
+      });
+    }
+  }
 }
