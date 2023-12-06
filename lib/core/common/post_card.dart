@@ -1,6 +1,6 @@
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_community_redit_chat_app/community/controller/community_controller.dart';
+import 'package:flutter_community_redit_chat_app/features/auth/controller/community_controller.dart';
 import 'package:flutter_community_redit_chat_app/core/common/error_text.dart';
 import 'package:flutter_community_redit_chat_app/core/constants/constants.dart';
 import 'package:flutter_community_redit_chat_app/core/loader.dart';

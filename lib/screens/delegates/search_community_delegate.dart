@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_community_redit_chat_app/community/controller/community_controller.dart';
+import 'package:flutter_community_redit_chat_app/features/auth/controller/community_controller.dart';
 import 'package:flutter_community_redit_chat_app/core/common/error_text.dart';
 import 'package:flutter_community_redit_chat_app/core/loader.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_community_redit_chat_app/community/repository/community_repository.dart';
+import 'package:flutter_community_redit_chat_app/features/auth/repository/community_repository.dart';
 import 'package:flutter_community_redit_chat_app/core/constants/constants.dart';
 import 'package:flutter_community_redit_chat_app/core/failure.dart';
 import 'package:flutter_community_redit_chat_app/core/providers/storage_repository_provider.dart';
