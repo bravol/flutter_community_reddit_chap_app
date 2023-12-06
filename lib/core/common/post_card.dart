@@ -235,6 +235,40 @@ class PostCard extends ConsumerWidget {
                                         ErrorText(error: error.toString()),
                                     loading: () => const Loader(),
                                   ),
+
+                              //awards
+                              IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => Dialog(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(20),
+                                              child: GridView.builder(
+                                                  shrinkWrap: true,
+                                                  gridDelegate:
+                                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                                          crossAxisCount: 4),
+                                                  itemCount: user.awards.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    final award =
+                                                        user.awards[index];
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Image.asset(
+                                                          Constants
+                                                              .awards[award]!),
+                                                    );
+                                                  }),
+                                            ),
+                                          ));
+                                },
+                                icon: const Icon(Icons.card_giftcard_outlined),
+                              )
                             ],
                           )
                         ],
