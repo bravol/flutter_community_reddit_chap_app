@@ -3,11 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/core/providers/storage_repository_provider.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/repository/user_profile_repository.dart';
+import 'package:flutter_community_redit_chat_app/models/post_model.dart';
 import 'package:flutter_community_redit_chat_app/models/user_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_community_redit_chat_app/core/utils.dart';
+
+//stream provider to get user posts
+final getUserPostsControllerProvider = StreamProvider.family(
+  (ref, String uid) =>
+      ref.read(userProfileControllerProvider.notifier).getUserPosts(uid),
+);
 
 //user controller provider
 final userProfileControllerProvider =
@@ -77,5 +84,10 @@ class UserProfileController extends StateNotifier<bool> {
       _ref.read(userProvider.notifier).update((state) => user);
       Routemaster.of(context).pop();
     });
+  }
+
+  //getting users posts
+  Stream<List<Post>> getUserPosts(String uid) {
+    return _userProfileRepository.getUserPosts(uid);
   }
 }

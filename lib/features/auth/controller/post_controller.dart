@@ -5,12 +5,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/core/providers/storage_repository_provider.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/repository/post_repository.dart';
+import 'package:flutter_community_redit_chat_app/models/comment_model.dart';
 import 'package:flutter_community_redit_chat_app/models/community_model.dart';
 import 'package:flutter_community_redit_chat_app/models/post_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_community_redit_chat_app/core/utils.dart';
+
+//a stream provider to get comments of the particular post by post id
+final getPostCommentsControllerProvider = StreamProvider.family(
+  (ref, String postId) =>
+      ref.watch(postControllerProvider.notifier).getPostComments(postId),
+);
+
+//a stream provider to get post by id
+final getPostbyIdControllerProvider = StreamProvider.family(
+  (ref, String postId) =>
+      ref.watch(postControllerProvider.notifier).getPostById(postId),
+);
 
 //stream provider for user posts
 final userPostControllerProvider = StreamProvider.family(
@@ -180,5 +193,39 @@ class PostController extends StateNotifier<bool> {
   void downvote(Post post) async {
     final userId = _ref.read(userProvider)!.uid;
     _postRepository.downvote(post, userId);
+  }
+
+  //getting post by id
+  Stream<Post> getPostById(String postId) {
+    return _postRepository.getPostById(postId);
+  }
+
+  //add comment
+  void addComment(
+      {required String text,
+      required BuildContext context,
+      required Post post}) async {
+    state = true;
+    final user = _ref.read(userProvider)!;
+    const uuid = Uuid();
+
+    Comment comment = Comment(
+      id: uuid.v4(),
+      text: text,
+      createdAt: Timestamp.fromDate(DateTime.now()),
+      postId: post.id,
+      userName: user.name,
+      profilePic: user.profilePicture,
+    );
+
+    final res = await _postRepository.addComment(comment);
+    state = false;
+    res.fold((l) => showErrorSnackBar(context, l.message),
+        (r) => showSuccessSnackBar(context, 'Your comment has been recieved'));
+  }
+
+  //getting comments of the particular post
+  Stream<List<Comment>> getPostComments(String postId) {
+    return _postRepository.getCommentsofPost(postId);
   }
 }

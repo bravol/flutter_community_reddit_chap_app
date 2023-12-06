@@ -3,6 +3,7 @@ import 'package:flutter_community_redit_chat_app/community/screens/community_scr
 import 'package:flutter_community_redit_chat_app/community/screens/create_community_screen.dart';
 import 'package:flutter_community_redit_chat_app/features/posts/add_post_type_screen.dart';
 import 'package:flutter_community_redit_chat_app/screens/add_moderator.dart';
+import 'package:flutter_community_redit_chat_app/screens/comments_screen.dart';
 import 'package:flutter_community_redit_chat_app/screens/edit_community_Screen.dart';
 import 'package:flutter_community_redit_chat_app/screens/edit_profile_screen.dart';
 import 'package:flutter_community_redit_chat_app/screens/home_screen.dart';
@@ -52,5 +53,9 @@ final loggedInRoute = RouteMap(routes: {
   '/add-post-type/:type': (routeData) => MaterialPage(
           child: AddPostTypeScreen(
         type: routeData.pathParameters['type']!,
+      )),
+  '/post/:postId/comments': (routeData) => MaterialPage(
+          child: CommentScreen(
+        postId: routeData.pathParameters['postId']!,
       )),
 });

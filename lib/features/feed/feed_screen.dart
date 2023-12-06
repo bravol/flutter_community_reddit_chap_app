@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/community/controller/community_controller.dart';
 import 'package:flutter_community_redit_chat_app/core/common/error_text.dart';
@@ -27,7 +26,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                       return PostCard(post: post);
                     }),
                 error: (error, stackTrace) {
-                  if (kDebugMode) print(error);
+                  print(error);
                   return (ErrorText(error: error.toString()));
                 },
                 loading: () => const Loader()),

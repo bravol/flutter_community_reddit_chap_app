@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/community/controller/community_controller.dart';
 import 'package:flutter_community_redit_chat_app/core/common/error_text.dart';
+import 'package:flutter_community_redit_chat_app/core/common/post_card.dart';
 import 'package:flutter_community_redit_chat_app/core/loader.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter_community_redit_chat_app/models/community_model.dart';
@@ -116,7 +117,21 @@ class CommunityScreen extends ConsumerWidget {
                     )
                   ];
                 },
-                body: const Text('Displaying posts of the community'),
+                body: ref.watch(getCommunityPostsControllerProvider(id)).when(
+                      data: (data) {
+                        return ListView.builder(
+                            itemCount: data.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final post = data[index];
+                              return PostCard(post: post);
+                            });
+                      },
+                      error: (error, stackTrace) {
+                        // print(error);
+                        return ErrorText(error: error.toString());
+                      },
+                      loading: () => const Loader(),
+                    ),
               ),
           error: (error, stackTrace) => ErrorText(error: error.toString()),
           loading: () => const Loader()),

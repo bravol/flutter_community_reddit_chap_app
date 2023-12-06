@@ -5,6 +5,7 @@ import 'package:flutter_community_redit_chat_app/core/failure.dart';
 import 'package:flutter_community_redit_chat_app/core/providers/firebase_provider.dart';
 import 'package:flutter_community_redit_chat_app/core/type_def.dart';
 import 'package:flutter_community_redit_chat_app/models/community_model.dart';
+import 'package:flutter_community_redit_chat_app/models/post_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -41,6 +42,9 @@ class CommunityRepository {
 //create community collection
   CollectionReference get _communitiesCollection =>
       _firestore.collection(FirebaseConstants.communitiesCollection);
+
+  CollectionReference get _postsCollection =>
+      _firestore.collection(FirebaseConstants.postsCollection);
 
   //getting users communities
   Stream<List<Community>> getUserCommunities(String uid) {
@@ -133,5 +137,20 @@ class CommunityRepository {
     } catch (e) {
       return left(Failure(e.toString()));
     }
+  }
+
+  //getting all posts of the community
+  Stream<List<Post>> getCommunityPosts(String communityId) {
+    return _postsCollection
+        .where('communityId', isEqualTo: communityId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (event) => event.docs
+              .map(
+                (e) => Post.fromMap(e.data() as Map<String, dynamic>),
+              )
+              .toList(),
+        );
   }
 }

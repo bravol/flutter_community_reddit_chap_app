@@ -3,6 +3,7 @@ import 'package:flutter_community_redit_chat_app/core/constants/firebase_constan
 import 'package:flutter_community_redit_chat_app/core/failure.dart';
 import 'package:flutter_community_redit_chat_app/core/providers/firebase_provider.dart';
 import 'package:flutter_community_redit_chat_app/core/type_def.dart';
+import 'package:flutter_community_redit_chat_app/models/comment_model.dart';
 import 'package:flutter_community_redit_chat_app/models/community_model.dart';
 import 'package:flutter_community_redit_chat_app/models/post_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +21,9 @@ class PostRepository {
 
   CollectionReference get _postsCollection =>
       _firestore.collection(FirebaseConstants.postsCollection);
+  //commnets collection
+  CollectionReference get _commentsCollection =>
+      _firestore.collection(FirebaseConstants.commentsCollection);
 
   //a function to add post to database
   FutureVoid addPost(Post post) async {
@@ -93,5 +97,49 @@ class PostRepository {
         'downvotes': FieldValue.arrayUnion([userId])
       });
     }
+  }
+
+  //get the post by id
+  // Future<Either<Failure, Post>> getPostById(String id) async {}
+  Stream<Post> getPostById(String postId) {
+    return _postsCollection.doc(postId).snapshots().map(
+          (event) => Post.fromMap(event.data() as Map<String, dynamic>),
+        );
+  }
+
+  //a function to add comment to database
+  FutureVoid addComment(Comment comment) async {
+    try {
+      await _commentsCollection.doc(comment.id).set(comment.toMap());
+      return right(_postsCollection.doc(comment.postId).update({
+        'commentCount': FieldValue.increment(1),
+      }));
+    } on FirebaseException catch (e) {
+      return left(Failure(e.message!));
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  //getting the comments
+
+  //fetcing posts
+  Stream<List<Comment>> getCommentsofPost(String postId) {
+    return _commentsCollection
+        .where(
+          'postId',
+          isEqualTo: postId,
+        )
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (event) => event.docs
+              .map(
+                (e) => Comment.fromMap(
+                  e.data() as Map<String, dynamic>,
+                ),
+              )
+              .toList(),
+        );
   }
 }

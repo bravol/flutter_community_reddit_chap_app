@@ -8,10 +8,18 @@ import 'package:flutter_community_redit_chat_app/core/providers/storage_reposito
 import 'package:flutter_community_redit_chat_app/core/utils.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter_community_redit_chat_app/models/community_model.dart';
+import 'package:flutter_community_redit_chat_app/models/post_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:uuid/uuid.dart';
+
+//a stram provider to get community posts
+final getCommunityPostsControllerProvider = StreamProvider.family(
+  (ref, String communityId) => ref
+      .watch(communityControllerProvider.notifier)
+      .getCommunityPosts(communityId),
+);
 
 // stream user communities controller provider
 final userCommuintiesControllerProvider = StreamProvider((ref) {
@@ -159,5 +167,10 @@ class CommunityController extends StateNotifier<bool> {
     final res = await _communityRepository.addModerator(communityId, uids);
     res.fold((l) => showErrorSnackBar(context, l.message),
         (r) => Routemaster.of(context).pop());
+  }
+
+  //getting all posts for the community
+  Stream<List<Post>> getCommunityPosts(String communityId) {
+    return _communityRepository.getCommunityPosts(communityId);
   }
 }
