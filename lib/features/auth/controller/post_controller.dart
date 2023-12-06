@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_community_redit_chat_app/core/enums/enums.dart';
 import 'package:flutter_community_redit_chat_app/core/providers/storage_repository_provider.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/auth_controller.dart';
+import 'package:flutter_community_redit_chat_app/features/auth/controller/user_profile_controller.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/repository/post_repository.dart';
 import 'package:flutter_community_redit_chat_app/models/comment_model.dart';
 import 'package:flutter_community_redit_chat_app/models/community_model.dart';
@@ -83,6 +85,10 @@ class PostController extends StateNotifier<bool> {
     );
 
     final res = await _postRepository.addPost(post);
+    //update the karma
+    _ref
+        .read(userProfileControllerProvider.notifier)
+        .updateUserKarma(UserKarma.textPost);
     state = false;
     res.fold((l) => showErrorSnackBar(context, l.message), (r) {
       showSuccessSnackBar(context, 'Posed Successfully');
@@ -118,6 +124,10 @@ class PostController extends StateNotifier<bool> {
     );
 
     final res = await _postRepository.addPost(post);
+    //update the karma
+    _ref
+        .read(userProfileControllerProvider.notifier)
+        .updateUserKarma(UserKarma.linkPost);
     state = false;
     res.fold((l) => showErrorSnackBar(context, l.message), (r) {
       showSuccessSnackBar(context, 'Posed Successfully');
@@ -157,6 +167,10 @@ class PostController extends StateNotifier<bool> {
       );
 
       final res = await _postRepository.addPost(post);
+      //update the karma
+      _ref
+          .read(userProfileControllerProvider.notifier)
+          .updateUserKarma(UserKarma.imagePost);
       state = false;
       res.fold((l) => showErrorSnackBar(context, l.message), (r) {
         showSuccessSnackBar(context, 'Posted Successfully');
@@ -176,6 +190,11 @@ class PostController extends StateNotifier<bool> {
   //delete post
   void deletePost(Post post, BuildContext context) async {
     final res = await _postRepository.deletePost(post);
+
+    //update the karma
+    _ref
+        .read(userProfileControllerProvider.notifier)
+        .updateUserKarma(UserKarma.deletePost);
 
     res.fold(
       (l) => showErrorSnackBar(context, l.message),
@@ -219,6 +238,10 @@ class PostController extends StateNotifier<bool> {
     );
 
     final res = await _postRepository.addComment(comment);
+    //update the karma
+    _ref
+        .read(userProfileControllerProvider.notifier)
+        .updateUserKarma(UserKarma.comment);
     state = false;
     res.fold((l) => showErrorSnackBar(context, l.message),
         (r) => showSuccessSnackBar(context, 'Your comment has been recieved'));
