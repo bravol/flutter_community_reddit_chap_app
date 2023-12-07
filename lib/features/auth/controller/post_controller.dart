@@ -91,7 +91,7 @@ class PostController extends StateNotifier<bool> {
         .updateUserKarma(UserKarma.textPost);
     state = false;
     res.fold((l) => showErrorSnackBar(context, l.message), (r) {
-      showSuccessSnackBar(context, 'Posed Successfully');
+      showSuccessSnackBar(context, 'Posted Successfully');
       Routemaster.of(context).pop();
     });
   }
@@ -130,7 +130,7 @@ class PostController extends StateNotifier<bool> {
         .updateUserKarma(UserKarma.linkPost);
     state = false;
     res.fold((l) => showErrorSnackBar(context, l.message), (r) {
-      showSuccessSnackBar(context, 'Posed Successfully');
+      showSuccessSnackBar(context, 'Posted Successfully');
       Routemaster.of(context).pop();
     });
   }

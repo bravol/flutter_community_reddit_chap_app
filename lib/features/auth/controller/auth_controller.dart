@@ -11,7 +11,8 @@ import 'package:flutter_community_redit_chat_app/core/utils.dart';
 final userProvider = StateProvider<UserModel?>((ref) => null);
 
 final authControllerProvider = StateNotifierProvider<AuthController, bool>(
-    (ref) => AuthController(authRepository: ref.watch(authRepositoryProvider)));
+    (ref) => AuthController(
+        authRepository: ref.watch(authRepositoryProvider), ref: ref));
 
 //auth state change controller
 final authStateChangeProvider = StreamProvider((ref) {
@@ -27,9 +28,11 @@ final getUserDataProvider = StreamProvider.family((ref, String uid) {
 
 class AuthController extends StateNotifier<bool> {
   final AuthRepository _authRepository;
+  final Ref _ref;
 
-  AuthController({required AuthRepository authRepository})
+  AuthController({required AuthRepository authRepository, required Ref ref})
       : _authRepository = authRepository,
+        _ref = ref,
         super(false);
 
 //sign up the user for the first time
@@ -46,7 +49,8 @@ class AuthController extends StateNotifier<bool> {
       fullName,
     );
     state = false;
-    res.fold((l) => showErrorSnackBar(context, l.message), (r) {
+    res.fold((l) => showErrorSnackBar(context, l.message), (userModel) {
+      _ref.read(userProvider.notifier).update((state) => userModel);
       showSuccessSnackBar(context, 'Account created successfully');
       Routemaster.of(context).push('/');
     });
@@ -63,9 +67,25 @@ class AuthController extends StateNotifier<bool> {
         await _authRepository.signInWithEmailAndPassword(email, password);
     state = false;
     user.fold((l) => showErrorSnackBar(context, l.message), (r) {
+      _ref.read(userProvider.notifier).update((state) => r);
       showSuccessSnackBar(context, 'You are now signed in');
       Routemaster.of(context).push('/');
     });
+  }
+
+  //SIGNING IN AS GUEST
+  void signInAsGuest(BuildContext context) async {
+    state = true;
+    final user = await _authRepository.signInAsGuest();
+    state = false;
+    user.fold(
+      (l) => showErrorSnackBar(context, l.message),
+      (userModel) {
+        showSuccessSnackBar(context, 'Signed in as a guest');
+        _ref.read(userProvider.notifier).update((state) => userModel);
+        Routemaster.of(context).push('/');
+      },
+    );
   }
 
   //signout user

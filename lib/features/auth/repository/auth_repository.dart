@@ -68,6 +68,31 @@ class AuthRepository {
     }
   }
 
+  //sign in as aguest
+  FutureEither<UserModel> signInAsGuest() async {
+    try {
+      var userCredential = await _auth.signInAnonymously();
+
+      UserModel userModel = UserModel(
+        name: 'Guest',
+        email: '',
+        profilePicture: Constants.avatarDefault,
+        banner: Constants.bannerDefault,
+        uid: userCredential.user!.uid,
+        isAuthenticated: false,
+        karma: 0,
+        awards: [],
+      );
+
+      await _storeUser.doc(userCredential.user!.uid).set(userModel.toMap());
+      return right(userModel);
+    } on FirebaseException catch (e) {
+      return left(Failure(e.message!));
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
   //sign in with email address and password
   FutureEither signInWithEmailAndPassword(String email, String password) async {
     try {
