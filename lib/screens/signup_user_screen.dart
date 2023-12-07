@@ -174,7 +174,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 18, vertical: 20),
                       child: ElevatedButton(
-                        onPressed: _signUpUser,
+                        onPressed: () => _signUpUser,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           shape: RoundedRectangleBorder(

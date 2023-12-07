@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_community_redit_chat_app/features/feed/feed_screen.dart';
+import 'package:flutter_community_redit_chat_app/screens/feed_screen.dart';
 import 'package:flutter_community_redit_chat_app/features/posts/add_posts_screen.dart';
 
 class Constants {

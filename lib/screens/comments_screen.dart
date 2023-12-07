@@ -7,6 +7,8 @@ import 'package:flutter_community_redit_chat_app/models/post_model.dart';
 import 'package:flutter_community_redit_chat_app/widgets/comment_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../features/auth/controller/auth_controller.dart';
+
 class CommentScreen extends ConsumerStatefulWidget {
   const CommentScreen({super.key, required this.postId});
 
@@ -41,6 +43,8 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider)!;
+    final isGuest = !user.isAuthenticated;
     return Scaffold(
       appBar: AppBar(),
       body: ref.watch(getPostbyIdControllerProvider(widget.postId)).when(
@@ -48,14 +52,15 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
               return Column(
                 children: [
                   PostCard(post: post),
-                  TextField(
-                    onSubmitted: (val) => addComment(post),
-                    controller: commentController,
-                    decoration: const InputDecoration(
-                        hintText: 'What is your thought',
-                        filled: true,
-                        border: InputBorder.none),
-                  ),
+                  if (!isGuest)
+                    TextField(
+                      onSubmitted: (val) => addComment(post),
+                      controller: commentController,
+                      decoration: const InputDecoration(
+                          hintText: 'What is your thought',
+                          filled: true,
+                          border: InputBorder.none),
+                    ),
                   ref
                       .watch(getPostCommentsControllerProvider(widget.postId))
                       .when(

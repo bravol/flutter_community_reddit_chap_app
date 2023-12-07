@@ -15,6 +15,12 @@ import 'package:routemaster/routemaster.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_community_redit_chat_app/core/utils.dart';
 
+//a stream provider for guest posts
+
+final guestPostControllerProvider = StreamProvider(
+  (ref) => ref.watch(postControllerProvider.notifier).fetchGuestPosts(),
+);
+
 //a stream provider to get comments of the particular post by post id
 final getPostCommentsControllerProvider = StreamProvider.family(
   (ref, String postId) =>
@@ -274,5 +280,10 @@ class PostController extends StateNotifier<bool> {
       });
       Routemaster.of(context).pop();
     });
+  }
+
+  //fetchinhg the first 10 community posts for guest user
+  Stream<List<Post>> fetchGuestPosts() {
+    return _postRepository.fetchGuestPosts();
   }
 }
