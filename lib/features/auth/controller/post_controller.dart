@@ -251,4 +251,28 @@ class PostController extends StateNotifier<bool> {
   Stream<List<Comment>> getPostComments(String postId) {
     return _postRepository.getCommentsofPost(postId);
   }
+
+  //sending/gfting award to the opposite user
+  void awardPost(
+      {required BuildContext context,
+      required String award,
+      required Post post}) async {
+    final user = _ref.read(userProvider)!;
+
+    final res = await _postRepository.awardPost(
+        post: post, award: award, senderId: user.uid);
+
+    res.fold((l) => showErrorSnackBar(context, l.message), (r) {
+      //updating the user karma of the user sent to
+      _ref
+          .read(userProfileControllerProvider.notifier)
+          .updateUserKarma(UserKarma.awardPost);
+      //update the users award of the loggd in user/sender
+      _ref.read(userProvider.notifier).update((state) {
+        state?.awards.remove(award);
+        return state;
+      });
+      Routemaster.of(context).pop();
+    });
+  }
 }

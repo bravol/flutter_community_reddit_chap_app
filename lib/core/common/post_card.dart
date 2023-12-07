@@ -49,6 +49,15 @@ class PostCard extends ConsumerWidget {
     Routemaster.of(context).push('/post/${post.id}/comments');
   }
 
+  //awarding the post
+  void awardPost(WidgetRef ref, BuildContext context, String award) {
+    ref.read(postControllerProvider.notifier).awardPost(
+          context: context,
+          award: award,
+          post: post,
+        );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isTypeImage = post.type == 'image';
@@ -129,6 +138,26 @@ class PostCard extends ConsumerWidget {
                                 ),
                             ],
                           ),
+                          //diplaying the awards given to another user
+                          if (post.awards.isNotEmpty) ...[
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            SizedBox(
+                              height: 25,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: post.awards.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final award = post.awards[index];
+                                  return Image.asset(
+                                    Constants.awards[award]!,
+                                    height: 25,
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                           Padding(
                             padding: const EdgeInsets.only(top: 10.0),
                             child: Text(
@@ -255,13 +284,17 @@ class PostCard extends ConsumerWidget {
                                                           int index) {
                                                     final award =
                                                         user.awards[index];
-                                                    return Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Image.asset(
-                                                          Constants
-                                                              .awards[award]!),
+                                                    return GestureDetector(
+                                                      onTap: () => awardPost(
+                                                          ref, context, award),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Image.asset(
+                                                            Constants.awards[
+                                                                award]!),
+                                                      ),
                                                     );
                                                   }),
                                             ),
