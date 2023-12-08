@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/community_controller.dart';
 import 'package:flutter_community_redit_chat_app/core/common/error_text.dart';
@@ -33,33 +34,30 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
   File? bannerFile;
   File? profileFile;
 
+  Uint8List? bannerWebfile;
+  Uint8List? profileWebfile;
+
   //select banner image
   void selectBannerImage() async {
     final res = await pickImage();
 
-    if (res != null) {
+    if (kIsWeb) {
       setState(() {
-        bannerFile = File(res.files.first.path!);
+        bannerWebfile = res!.files.first.bytes;
       });
-    }
-  }
-
-  //select profile image
-  void selectProfileImage() async {
-    final res = await pickImage();
-
-    if (res != null) {
+    } else {
       setState(() {
-        profileFile = File(res.files.first.path!);
+        bannerFile = File(res!.files.first.path!);
       });
     }
   }
 
   void sharePost() {
     if (widget.type == 'image' &&
-        bannerFile != null &&
+        (bannerFile != null || bannerWebfile != null) &&
         titleController.text.isNotEmpty) {
       ref.read(postControllerProvider.notifier).shareImagePost(
+          webFile: bannerWebfile,
           context: context,
           title: titleController.text.trim(),
           selectedCommunity: selectedCommunity ?? communities[0],
@@ -143,14 +141,16 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: bannerFile != null
-                                ? Image.file(bannerFile!)
-                                : const Center(
-                                    child: Icon(
-                                      Icons.camera_alt_outlined,
-                                      size: 40,
-                                    ),
-                                  ),
+                            child: bannerWebfile != null
+                                ? Image.memory(bannerWebfile!)
+                                : bannerFile != null
+                                    ? Image.file(bannerFile!)
+                                    : const Center(
+                                        child: Icon(
+                                          Icons.camera_alt_outlined,
+                                          size: 40,
+                                        ),
+                                      ),
                           ),
                         ),
                       ),

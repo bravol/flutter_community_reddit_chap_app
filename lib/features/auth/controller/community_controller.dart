@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/repository/community_repository.dart';
 import 'package:flutter_community_redit_chat_app/core/constants/constants.dart';
@@ -105,20 +106,28 @@ class CommunityController extends StateNotifier<bool> {
       {required File? profileFile,
       required File? bannerFile,
       required BuildContext context,
+      required Uint8List? profileWebFile,
+      required Uint8List? bannerWebFile,
       required Community community}) async {
     state = true;
     //profile picture
-    if (profileFile != null) {
+    if (profileFile != null || profileWebFile != null) {
       final res = await _storageRepository.storeFile(
-          path: 'communities/profile', id: community.name, file: profileFile);
+          path: 'communities/profile',
+          id: community.name,
+          file: profileFile,
+          webFile: profileWebFile);
 
       res.fold((l) => showErrorSnackBar(context, l.message),
           (r) => community = community.copyWith(avatar: r));
     }
     //banner
-    if (bannerFile != null) {
+    if (bannerFile != null || bannerWebFile != null) {
       final res = await _storageRepository.storeFile(
-          path: 'communities/banner', id: community.name, file: bannerFile);
+          path: 'communities/banner',
+          id: community.name,
+          file: bannerFile,
+          webFile: bannerWebFile);
 
       res.fold(
         (l) => showErrorSnackBar(context, l.message),

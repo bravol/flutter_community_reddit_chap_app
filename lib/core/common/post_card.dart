@@ -1,4 +1,5 @@
 import 'package:any_link_preview/any_link_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/community_controller.dart';
 import 'package:flutter_community_redit_chat_app/core/common/error_text.dart';
@@ -76,7 +77,37 @@ class PostCard extends ConsumerWidget {
             ),
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (kIsWeb)
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: isGuest ? () {} : () => upvotePost(ref),
+                        icon: Icon(
+                          Constants.up,
+                          size: 30,
+                          color: post.upvotes.contains(user.uid)
+                              ? Pallete.redColor
+                              : null,
+                        ),
+                      ),
+                      Text(
+                        '${post.upvotes.length - post.downvotes.length == 0 ? "Vote" : post.upvotes.length - post.downvotes.length}',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      IconButton(
+                        onPressed: isGuest ? () {} : () => downvotePost(ref),
+                        icon: Icon(
+                          Constants.down,
+                          size: 30,
+                          color: post.downvotes.contains(user.uid)
+                              ? Pallete.blueColor
+                              : null,
+                        ),
+                      ),
+                    ],
+                  ),
                 Expanded(
                   child: Column(
                     children: [
@@ -204,42 +235,45 @@ class PostCard extends ConsumerWidget {
                                   style: const TextStyle(color: Colors.grey),
                                 ),
                               ),
+
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 //voting
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: isGuest
-                                          ? () {}
-                                          : () => upvotePost(ref),
-                                      icon: Icon(
-                                        Constants.up,
-                                        size: 30,
-                                        color: post.upvotes.contains(user.uid)
-                                            ? Pallete.redColor
-                                            : null,
+                                if (!kIsWeb)
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        onPressed: isGuest
+                                            ? () {}
+                                            : () => upvotePost(ref),
+                                        icon: Icon(
+                                          Constants.up,
+                                          size: 30,
+                                          color: post.upvotes.contains(user.uid)
+                                              ? Pallete.redColor
+                                              : null,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      '${post.upvotes.length - post.downvotes.length == 0 ? "Vote" : post.upvotes.length - post.downvotes.length}',
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
-                                    IconButton(
-                                      onPressed: isGuest
-                                          ? () {}
-                                          : () => downvotePost(ref),
-                                      icon: Icon(
-                                        Constants.down,
-                                        size: 30,
-                                        color: post.downvotes.contains(user.uid)
-                                            ? Pallete.blueColor
-                                            : null,
+                                      Text(
+                                        '${post.upvotes.length - post.downvotes.length == 0 ? "Vote" : post.upvotes.length - post.downvotes.length}',
+                                        style: const TextStyle(fontSize: 16),
                                       ),
-                                    ),
-                                  ],
-                                ),
+                                      IconButton(
+                                        onPressed: isGuest
+                                            ? () {}
+                                            : () => downvotePost(ref),
+                                        icon: Icon(
+                                          Constants.down,
+                                          size: 30,
+                                          color:
+                                              post.downvotes.contains(user.uid)
+                                                  ? Pallete.blueColor
+                                                  : null,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 //commenting
                                 Row(
                                   children: [

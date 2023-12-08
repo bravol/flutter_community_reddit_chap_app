@@ -4,6 +4,7 @@ import 'package:flutter_community_redit_chat_app/core/common/post_card.dart';
 import 'package:flutter_community_redit_chat_app/core/loader.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/post_controller.dart';
 import 'package:flutter_community_redit_chat_app/models/post_model.dart';
+import 'package:flutter_community_redit_chat_app/responsive/responsive.dart';
 import 'package:flutter_community_redit_chat_app/widgets/comment_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -53,13 +54,15 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                 children: [
                   PostCard(post: post),
                   if (!isGuest)
-                    TextField(
-                      onSubmitted: (val) => addComment(post),
-                      controller: commentController,
-                      decoration: const InputDecoration(
-                          hintText: 'What is your thought',
-                          filled: true,
-                          border: InputBorder.none),
+                    Responsive(
+                      child: TextField(
+                        onSubmitted: (val) => addComment(post),
+                        controller: commentController,
+                        decoration: const InputDecoration(
+                            hintText: 'What is your thought',
+                            filled: true,
+                            border: InputBorder.none),
+                      ),
                     ),
                   ref
                       .watch(getPostCommentsControllerProvider(widget.postId))

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/core/enums/enums.dart';
 import 'package:flutter_community_redit_chat_app/core/providers/storage_repository_provider.dart';
@@ -146,13 +147,17 @@ class PostController extends StateNotifier<bool> {
       {required BuildContext context,
       required String title,
       required Community selectedCommunity,
+      required Uint8List? webFile,
       required File? file}) async {
     state = true;
     String postId = const Uuid().v1();
     final user = _ref.read(userProvider)!;
 
     final imageRes = await _storageRepository.storeFile(
-        path: 'posts/${selectedCommunity.name}', id: postId, file: file);
+        path: 'posts/${selectedCommunity.name}',
+        id: postId,
+        file: file,
+        webFile: webFile);
 
     imageRes.fold((l) => showErrorSnackBar(context, l.message), (r) async {
       final Post post = Post(

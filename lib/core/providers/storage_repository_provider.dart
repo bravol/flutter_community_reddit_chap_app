@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_community_redit_chat_app/core/failure.dart';
 import 'package:flutter_community_redit_chat_app/core/providers/firebase_provider.dart';
 import 'package:flutter_community_redit_chat_app/core/type_def.dart';
@@ -19,11 +20,22 @@ class StorageRepository {
 
   //a function to store file FutureEither(it can either returen error or a String)
   FutureEither<String> storeFile(
-      {required String path, required String id, required File? file}) async {
+      {required String path,
+      required String id,
+      required File? file,
+      required Uint8List? webFile}) async {
     try {
-      //users/proflePic/123
+      UploadTask uploadTask;
+
       final ref = _firebaseStorage.ref().child(path).child(id);
-      UploadTask uploadTask = ref.putFile(file!);
+
+      if (kIsWeb) {
+        uploadTask = ref.putData(webFile!);
+      } else {
+        uploadTask = ref.putFile(file!);
+      }
+
+      //users/proflePic/123
 
       final snapshot = await uploadTask;
 

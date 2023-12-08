@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/community_controller.dart';
 import 'package:flutter_community_redit_chat_app/core/common/error_text.dart';
@@ -23,13 +24,19 @@ class EditCommunityScreen extends ConsumerStatefulWidget {
 class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
   File? bannerFile;
   File? profileFile;
+  Uint8List? bannerWebfile;
+  Uint8List? profileWebfile;
   //select banner image
   void selectBannerImage() async {
     final res = await pickImage();
 
-    if (res != null) {
+    if (kIsWeb) {
       setState(() {
-        bannerFile = File(res.files.first.path!);
+        bannerWebfile = res!.files.first.bytes;
+      });
+    } else {
+      setState(() {
+        bannerFile = File(res!.files.first.path!);
       });
     }
   }
@@ -38,9 +45,13 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
   void selectProfileImage() async {
     final res = await pickImage();
 
-    if (res != null) {
+    if (kIsWeb) {
       setState(() {
-        profileFile = File(res.files.first.path!);
+        profileWebfile = res!.files.first.bytes;
+      });
+    } else {
+      setState(() {
+        profileFile = File(res!.files.first.path!);
       });
     }
   }
@@ -49,6 +60,8 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
   void save(Community community) {
     ref.read(communityControllerProvider.notifier).editCommunity(
         profileFile: profileFile,
+        bannerWebFile: bannerWebfile,
+        profileWebFile: profileWebfile,
         bannerFile: bannerFile,
         context: context,
         community: community);
@@ -96,18 +109,23 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      child: bannerFile != null
-                                          ? Image.file(bannerFile!)
-                                          : community.banner.isEmpty ||
-                                                  community.banner ==
-                                                      Constants.bannerDefault
-                                              ? const Center(
-                                                  child: Icon(
-                                                    Icons.camera_alt_outlined,
-                                                    size: 40,
-                                                  ),
-                                                )
-                                              : Image.network(community.banner),
+                                      child: bannerWebfile != null
+                                          ? Image.memory(bannerWebfile!)
+                                          : bannerFile != null
+                                              ? Image.file(bannerFile!)
+                                              : community.banner.isEmpty ||
+                                                      community.banner ==
+                                                          Constants
+                                                              .bannerDefault
+                                                  ? const Center(
+                                                      child: Icon(
+                                                        Icons
+                                                            .camera_alt_outlined,
+                                                        size: 40,
+                                                      ),
+                                                    )
+                                                  : Image.network(
+                                                      community.banner),
                                     ),
                                   ),
                                 ),
@@ -117,19 +135,26 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
                                   left: 20,
                                   child: GestureDetector(
                                     onTap: selectProfileImage,
-                                    child: profileFile != null
+                                    child: profileWebfile != null
                                         ? CircleAvatar(
-                                            backgroundImage: FileImage(
-                                              profileFile!,
+                                            backgroundImage: MemoryImage(
+                                              profileWebfile!,
                                             ),
                                             radius: 32,
                                           )
-                                        : CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                              community.avatar,
-                                            ),
-                                            radius: 32,
-                                          ),
+                                        : profileFile != null
+                                            ? CircleAvatar(
+                                                backgroundImage: FileImage(
+                                                  profileFile!,
+                                                ),
+                                                radius: 32,
+                                              )
+                                            : CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                  community.avatar,
+                                                ),
+                                                radius: 32,
+                                              ),
                                   ),
                                 )
                               ],

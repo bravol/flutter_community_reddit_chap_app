@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_community_redit_chat_app/responsive/responsive.dart';
 
 //show snack bar in case of error or success message
 void showSuccessSnackBar(BuildContext context, String text) {
@@ -8,9 +9,11 @@ void showSuccessSnackBar(BuildContext context, String text) {
     ..showSnackBar(
       SnackBar(
         backgroundColor: Colors.green,
-        content: Text(
-          text,
-          style: const TextStyle(color: Colors.white),
+        content: Responsive(
+          child: Text(
+            text,
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
       ),
     );

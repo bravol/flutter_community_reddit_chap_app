@@ -3,6 +3,7 @@ import 'package:flutter_community_redit_chat_app/features/auth/controller/commun
 import 'package:flutter_community_redit_chat_app/core/common/error_text.dart';
 import 'package:flutter_community_redit_chat_app/core/loader.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/auth_controller.dart';
+import 'package:flutter_community_redit_chat_app/responsive/responsive.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddModeratorScreen extends ConsumerStatefulWidget {
@@ -49,33 +50,36 @@ class _AddModeratorScreenState extends ConsumerState<AddModeratorScreen> {
         ],
       ),
       body: ref.watch(getCommunityByIdControllerProvider(widget.id)).when(
-          data: (community) => ListView.builder(
-              itemCount: community.members.length,
-              itemBuilder: (BuildContext context, int index) {
-                final memberId = community.members[index];
+          data: (community) => Responsive(
+                child: ListView.builder(
+                    itemCount: community.members.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final memberId = community.members[index];
 
-                return ref.watch(getUserDataProvider(memberId)).when(
-                    data: (userData) {
-                      if (community.mods.contains(memberId) && counter == 0) {
-                        uids.add(memberId);
-                      }
-                      counter++;
-                      return CheckboxListTile(
-                        value: uids.contains(memberId),
-                        onChanged: (val) {
-                          if (val!) {
-                            addUid(memberId);
-                          } else {
-                            removeUid(memberId);
-                          }
-                        },
-                        title: Text(userData.name),
-                      );
-                    },
-                    error: (error, stackTrace) =>
-                        ErrorText(error: error.toString()),
-                    loading: () => const Loader());
-              }),
+                      return ref.watch(getUserDataProvider(memberId)).when(
+                          data: (userData) {
+                            if (community.mods.contains(memberId) &&
+                                counter == 0) {
+                              uids.add(memberId);
+                            }
+                            counter++;
+                            return CheckboxListTile(
+                              value: uids.contains(memberId),
+                              onChanged: (val) {
+                                if (val!) {
+                                  addUid(memberId);
+                                } else {
+                                  removeUid(memberId);
+                                }
+                              },
+                              title: Text(userData.name),
+                            );
+                          },
+                          error: (error, stackTrace) =>
+                              ErrorText(error: error.toString()),
+                          loading: () => const Loader());
+                    }),
+              ),
           error: (error, stackTrace) => ErrorText(error: error.toString()),
           loading: () => const Loader()),
     );

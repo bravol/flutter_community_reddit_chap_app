@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/core/enums/enums.dart';
 import 'package:flutter_community_redit_chat_app/core/providers/storage_repository_provider.dart';
@@ -47,6 +48,8 @@ class UserProfileController extends StateNotifier<bool> {
       {required File? profileFile,
       required File? bannerFile,
       required BuildContext context,
+      required Uint8List? profileWebFile,
+      required Uint8List? bannerWebFile,
       required String name}) async {
     state = true;
 
@@ -54,23 +57,23 @@ class UserProfileController extends StateNotifier<bool> {
     const uuid = Uuid();
     final id = uuid.v4();
 
-    if (profileFile != null) {
+    if (profileFile != null || profileWebFile != null) {
       final res = await _storageRepository.storeFile(
-        path: 'users/profile',
-        id: user.name + id,
-        file: profileFile,
-      );
+          path: 'users/profile',
+          id: user.name + id,
+          file: profileFile,
+          webFile: profileWebFile);
 
       res.fold((l) => showErrorSnackBar(context, l.message),
           (r) => user = user.copyWith(profilePicture: r));
     }
     //banner
-    if (bannerFile != null) {
+    if (bannerFile != null || bannerWebFile != null) {
       final res = await _storageRepository.storeFile(
-        path: 'users/user_banner',
-        id: user.name + id,
-        file: bannerFile,
-      );
+          path: 'users/user_banner',
+          id: user.name + id,
+          file: bannerFile,
+          webFile: bannerWebFile);
 
       res.fold(
         (l) => showErrorSnackBar(context, l.message),
