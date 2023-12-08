@@ -59,7 +59,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
             icon: const Icon(Icons.search),
           ),
-          if (kIsWeb || !isGuest)
+          if (kIsWeb && !isGuest)
             IconButton(
               onPressed: () {
                 Routemaster.of(context).push('/add-post');

@@ -25,6 +25,7 @@ final loggedOutRoute = RouteMap(routes: {
 //loggedIn(routes accessible when the user is logged in)
 final loggedInRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child: HomeScreen()),
+  '/login_screen': (_) => const MaterialPage(child: LoginScreeen()),
   '/sign_up_screen': (_) => const MaterialPage(child: SignUpScreen()),
   '/create_community': (_) =>
       const MaterialPage(child: CreateCommunityScreen()),
