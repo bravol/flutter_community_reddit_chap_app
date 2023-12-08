@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/theme/pallete.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,75 +19,77 @@ class _AddPostsScreenState extends ConsumerState<AddPostsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double cardHeightWidth = 120;
-    double iconSize = 60;
+    double cardHeightWidth = kIsWeb?360: 120;
+    double iconSize =kIsWeb? 120: 60;
     //theme coor
     final currentTheme = ref.watch(themeNotifierProvider);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        GestureDetector(
-          onTap: () => navigateToType('image'),
-          child: SizedBox(
-            height: cardHeightWidth,
-            width: cardHeightWidth,
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              color: currentTheme.backgroundColor,
-              elevation: 16,
-              child: Center(
-                child: Icon(
-                  Icons.image_outlined,
-                  size: iconSize,
+    return Scaffold(
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: () => navigateToType('image'),
+            child: SizedBox(
+              height: cardHeightWidth,
+              width: cardHeightWidth,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                color: currentTheme.backgroundColor,
+                elevation: 16,
+                child: Center(
+                  child: Icon(
+                    Icons.image_outlined,
+                    size: iconSize,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        GestureDetector(
-          onTap: () => navigateToType('text'),
-          child: SizedBox(
-            height: cardHeightWidth,
-            width: cardHeightWidth,
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              color: currentTheme.backgroundColor,
-              elevation: 16,
-              child: Center(
-                child: Icon(
-                  Icons.font_download_outlined,
-                  size: iconSize,
+          GestureDetector(
+            onTap: () => navigateToType('text'),
+            child: SizedBox(
+              height: cardHeightWidth,
+              width: cardHeightWidth,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                color: currentTheme.backgroundColor,
+                elevation: 16,
+                child: Center(
+                  child: Icon(
+                    Icons.font_download_outlined,
+                    size: iconSize,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        GestureDetector(
-          onTap: () => navigateToType('link'),
-          child: SizedBox(
-            height: cardHeightWidth,
-            width: cardHeightWidth,
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              color: currentTheme.backgroundColor,
-              elevation: 16,
-              child: Center(
-                child: Icon(
-                  Icons.link_outlined,
-                  size: iconSize,
+          GestureDetector(
+            onTap: () => navigateToType('link'),
+            child: SizedBox(
+              height: cardHeightWidth,
+              width: cardHeightWidth,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                color: currentTheme.backgroundColor,
+                elevation: 16,
+                child: Center(
+                  child: Icon(
+                    Icons.link_outlined,
+                    size: iconSize,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

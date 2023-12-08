@@ -7,6 +7,7 @@ import 'package:flutter_community_redit_chat_app/core/loader.dart';
 import 'package:flutter_community_redit_chat_app/core/utils.dart';
 import 'package:flutter_community_redit_chat_app/features/auth/controller/post_controller.dart';
 import 'package:flutter_community_redit_chat_app/models/community_model.dart';
+import 'package:flutter_community_redit_chat_app/responsive/responsive.dart';
 import 'package:flutter_community_redit_chat_app/theme/pallete.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -109,104 +110,106 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
       ),
       body: isLoading
           ? const Loader()
-          : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: titleController,
-                    decoration: const InputDecoration(
-                      filled: true,
-                      hintText: 'Enter title here',
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(20),
-                    ),
-                    maxLength: 30,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  if (isTypeImage)
-                    DottedBorder(
-                      borderType: BorderType.RRect,
-                      radius: const Radius.circular(10),
-                      dashPattern: const [10, 4],
-                      strokeCap: StrokeCap.round,
-                      color: currentTheme.textTheme.bodyText2!.color!,
-                      child: GestureDetector(
-                        onTap: selectBannerImage,
-                        child: Container(
-                          width: double.infinity,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: bannerFile != null
-                              ? Image.file(bannerFile!)
-                              : const Center(
-                                  child: Icon(
-                                    Icons.camera_alt_outlined,
-                                    size: 40,
-                                  ),
-                                ),
-                        ),
-                      ),
-                    ),
-                  if (isTypeText)
+          : Responsive(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
                     TextField(
-                      controller: descriptionController,
+                      controller: titleController,
                       decoration: const InputDecoration(
                         filled: true,
-                        hintText: 'Enter description',
+                        hintText: 'Enter title here',
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(20),
                       ),
-                      maxLines: 5,
-                    ),
-                  if (isTypeLink)
-                    TextField(
-                      controller: linkController,
-                      decoration: const InputDecoration(
-                        filled: true,
-                        hintText: 'Enter Iink here',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(20),
-                      ),
-                      maxLines: 4,
                       maxLength: 30,
                     ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Align(
-                    alignment: Alignment.topLeft,
-                    child: Text('Select community'),
-                  ),
-                  ref.watch(userCommuintiesControllerProvider).when(
-                        data: (data) {
-                          communities = data;
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    if (isTypeImage)
+                      DottedBorder(
+                        borderType: BorderType.RRect,
+                        radius: const Radius.circular(10),
+                        dashPattern: const [10, 4],
+                        strokeCap: StrokeCap.round,
+                        color: currentTheme.textTheme.bodyText2!.color!,
+                        child: GestureDetector(
+                          onTap: selectBannerImage,
+                          child: Container(
+                            width: double.infinity,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: bannerFile != null
+                                ? Image.file(bannerFile!)
+                                : const Center(
+                                    child: Icon(
+                                      Icons.camera_alt_outlined,
+                                      size: 40,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                    if (isTypeText)
+                      TextField(
+                        controller: descriptionController,
+                        decoration: const InputDecoration(
+                          filled: true,
+                          hintText: 'Enter description',
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.all(20),
+                        ),
+                        maxLines: 5,
+                      ),
+                    if (isTypeLink)
+                      TextField(
+                        controller: linkController,
+                        decoration: const InputDecoration(
+                          filled: true,
+                          hintText: 'Enter Iink here',
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.all(20),
+                        ),
+                        maxLines: 4,
+                        maxLength: 30,
+                      ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Align(
+                      alignment: Alignment.topLeft,
+                      child: Text('Select community'),
+                    ),
+                    ref.watch(userCommuintiesControllerProvider).when(
+                          data: (data) {
+                            communities = data;
 
-                          if (data.isEmpty) {
-                            const SizedBox();
-                          }
-                          return DropdownButton(
-                            value: selectedCommunity ?? data[0],
-                            items: data
-                                .map((e) => DropdownMenuItem(
-                                    value: e, child: Text(e.name)))
-                                .toList(),
-                            onChanged: (val) {
-                              setState(() {
-                                selectedCommunity = val;
-                              });
-                            },
-                          );
-                        },
-                        error: (error, stackTrace) =>
-                            ErrorText(error: error.toString()),
-                        loading: () => const Loader(),
-                      )
-                ],
+                            if (data.isEmpty) {
+                              const SizedBox();
+                            }
+                            return DropdownButton(
+                              value: selectedCommunity ?? data[0],
+                              items: data
+                                  .map((e) => DropdownMenuItem(
+                                      value: e, child: Text(e.name)))
+                                  .toList(),
+                              onChanged: (val) {
+                                setState(() {
+                                  selectedCommunity = val;
+                                });
+                              },
+                            );
+                          },
+                          error: (error, stackTrace) =>
+                              ErrorText(error: error.toString()),
+                          loading: () => const Loader(),
+                        )
+                  ],
+                ),
               ),
             ),
     );

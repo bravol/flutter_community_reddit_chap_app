@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_community_redit_chat_app/core/constants/constants.dart';
 import 'package:flutter_community_redit_chat_app/drawers/community_list_drawer.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_community_redit_chat_app/features/auth/controller/auth_c
 import 'package:flutter_community_redit_chat_app/screens/delegates/search_community_delegate.dart';
 import 'package:flutter_community_redit_chat_app/theme/pallete.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -57,6 +59,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
             icon: const Icon(Icons.search),
           ),
+          IconButton(
+              onPressed: () {
+                Routemaster.of(context).push('/add-post');
+              },
+              icon: const Icon(Icons.add)),
           Builder(builder: (context) {
             return IconButton(
               icon: CircleAvatar(
@@ -71,8 +78,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       endDrawer: isGuest ? null : const ProfileDrawer(),
       body: Constants.tabWidgets[_page],
 
-      //bottm navigatoi
-      bottomNavigationBar: isGuest
+      //bottm navigation
+      bottomNavigationBar: isGuest || kIsWeb
           ? null
           : CupertinoTabBar(
               activeColor: currentTheme.iconTheme.color,
