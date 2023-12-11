@@ -35,20 +35,20 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
   File? profileFile;
 
   Uint8List? bannerWebfile;
-  Uint8List? profileWebfile;
 
   //select banner image
   void selectBannerImage() async {
     final res = await pickImage();
-
-    if (kIsWeb) {
-      setState(() {
-        bannerWebfile = res!.files.first.bytes;
-      });
-    } else {
-      setState(() {
-        bannerFile = File(res!.files.first.path!);
-      });
+    if (res != null) {
+      if (kIsWeb) {
+        setState(() {
+          bannerWebfile = res.files.first.bytes;
+        });
+      } else {
+        setState(() {
+          bannerFile = File(res.files.first.path!);
+        });
+      }
     }
   }
 
@@ -57,11 +57,12 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
         (bannerFile != null || bannerWebfile != null) &&
         titleController.text.isNotEmpty) {
       ref.read(postControllerProvider.notifier).shareImagePost(
-          webFile: bannerWebfile,
-          context: context,
-          title: titleController.text.trim(),
-          selectedCommunity: selectedCommunity ?? communities[0],
-          file: bannerFile);
+            context: context,
+            title: titleController.text.trim(),
+            selectedCommunity: selectedCommunity ?? communities[0],
+            file: bannerFile,
+            webFile: bannerWebfile,
+          );
     } else if (widget.type == 'text' && titleController.text.isNotEmpty) {
       ref.read(postControllerProvider.notifier).shareTextPost(
           context: context,

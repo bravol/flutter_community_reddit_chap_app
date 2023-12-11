@@ -32,40 +32,45 @@ class _EditUserProfileScreenState extends ConsumerState<EditUserProfileScreen> {
   //select banner image
   void selectBannerImage() async {
     final res = await pickImage();
-    if (kIsWeb) {
-      setState(() {
-        bannerWebfile = res!.files.first.bytes;
-      });
-    } else {
-      setState(() {
-        bannerFile = File(res!.files.first.path!);
-      });
+    if (res != null) {
+      if (kIsWeb) {
+        setState(() {
+          bannerWebfile = res.files.first.bytes;
+        });
+      } else {
+        setState(() {
+          bannerFile = File(res.files.first.path!);
+        });
+      }
     }
   }
 
   //select profile image
   void selectProfileImage() async {
     final res = await pickImage();
-    if (kIsWeb) {
-      setState(() {
-        profileWebfile = res!.files.first.bytes;
-      });
-    } else {
-      setState(() {
-        profileFile = File(res!.files.first.path!);
-      });
+    if (res != null) {
+      if (kIsWeb) {
+        setState(() {
+          profileWebfile = res.files.first.bytes;
+        });
+      } else {
+        setState(() {
+          profileFile = File(res.files.first.path!);
+        });
+      }
     }
   }
 
   //save
   void save() {
     ref.read(userProfileControllerProvider.notifier).editUserprofile(
-        profileFile: profileFile,
-        bannerFile: bannerFile,
-        context: context,
-        bannerWebFile: bannerWebfile,
-        profileWebFile: profileWebfile,
-        name: nameController.text.trim());
+          profileFile: profileFile,
+          bannerFile: bannerFile,
+          context: context,
+          profileWebFile: profileWebfile,
+          name: nameController.text.trim(),
+          bannerWebFile: bannerWebfile,
+        );
   }
 
   @override

@@ -25,9 +25,8 @@ class StorageRepository {
       required File? file,
       required Uint8List? webFile}) async {
     try {
-      UploadTask uploadTask;
-
       final ref = _firebaseStorage.ref().child(path).child(id);
+      UploadTask uploadTask;
 
       if (kIsWeb) {
         uploadTask = ref.putData(webFile!);
